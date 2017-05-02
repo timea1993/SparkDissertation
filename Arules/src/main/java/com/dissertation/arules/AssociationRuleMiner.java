@@ -116,6 +116,7 @@ public class AssociationRuleMiner implements Serializable {
 
 		int combinations = (int) Math.pow(2, basket.size());
 		double[] result = new double[combinations];
+		
 		for (int i = 0; i < combinations; i++) {
 			Set<String> in = new HashSet<String>();
 			Set<String> out = new HashSet<String>();
