@@ -58,43 +58,38 @@ public class AssociationRuleMiner implements Serializable {
 		System.out.println("Finding association rules from the frequent itemsets: ");
 		System.out.println("-------------------------");
 		JavaRDD<Rule<String>> rules = model.generateAssociationRules(minConfidence).toJavaRDD();
-		try{
-		JavaRDD<CustomAssociationRule> result = rules.map((new Function<Rule<String>, CustomAssociationRule>() {
+		try {
+			JavaRDD<CustomAssociationRule> result = rules.map((new Function<Rule<String>, CustomAssociationRule>() {
 
-			@Override
-			public CustomAssociationRule call(Rule<String> rule) throws Exception {
-				CustomAssociationRule customRule = new CustomAssociationRule();
+				@Override
+				public CustomAssociationRule call(Rule<String> rule) throws Exception {
+					CustomAssociationRule customRule = new CustomAssociationRule();
 
-				List<String> ruleBasket = new ArrayList<String>();
-				ruleBasket.addAll(rule.javaConsequent());
-				ruleBasket.addAll(rule.javaAntecedent());
-				customRule.getAntecendent().addAll(rule.javaAntecedent());
-				customRule.getConsequent().addAll(rule.javaConsequent());
-				customRule.setConfidence(rule.confidence());
-				logger.info("Contingency matrix (!!column-wise traversal) = ");
-				double[] matrix = filterItem(ruleBasket, transactions);
-				customRule.setChisquare(computeChisq(matrix, rule.javaAntecedent().size()).statistic());
-				return customRule;
+					List<String> ruleBasket = new ArrayList<String>();
+					ruleBasket.addAll(rule.javaConsequent());
+					ruleBasket.addAll(rule.javaAntecedent());
+					customRule.getAntecendent().addAll(rule.javaAntecedent());
+					customRule.getConsequent().addAll(rule.javaConsequent());
+					customRule.setConfidence(rule.confidence());
+					//logger.info("Contingency matrix (!!column-wise traversal) = ");
+					//double[] matrix = filterItem(ruleBasket, transactions);
+					//customRule.setChisquare(computeChisq(matrix, rule.javaAntecedent().size()).statistic());
+					return customRule;
 
+				}
+
+			}));
+
+			logger.info("Before filtering " + result.collect().size() + " rules");
+			JavaRDD<CustomAssociationRule> toFilter = result.cartesian(result).map(SuperSetFilter.mapSuperSets)
+					.filter(SuperSetFilter.retainSuperSets).distinct();
+			List<CustomAssociationRule> finalResult = result.subtract(toFilter).collect();
+			logger.info("\n");
+			logger.info("Final results... after filtering there will be " + finalResult.size() + " rules");
+			for (CustomAssociationRule rule : finalResult) {
+				logger.info(rule.toString());
 			}
-
-		}));
-		
-		result.cartesian(result).filter(new Function<Tuple2<CustomAssociationRule, CustomAssociationRule>, Boolean>()
-		{
-
-			@Override
-			public Boolean call(Tuple2<CustomAssociationRule, CustomAssociationRule> arg) throws Exception {
-				return arg._1.isSuperSetOf(arg._2);
-			}
-			
-		});
-		
-	
-		for (CustomAssociationRule rule : result.collect())
-			logger.info(rule.toString());
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
 	}
@@ -116,7 +111,7 @@ public class AssociationRuleMiner implements Serializable {
 
 		int combinations = (int) Math.pow(2, basket.size());
 		double[] result = new double[combinations];
-		
+
 		for (int i = 0; i < combinations; i++) {
 			Set<String> in = new HashSet<String>();
 			Set<String> out = new HashSet<String>();
@@ -148,14 +143,15 @@ public class AssociationRuleMiner implements Serializable {
 			result[i] = countItems.count() == 0 ? 1 : countItems.count();
 
 		}
-/*		JavaPairRDD<List<String>, Integer> countryContactCounts = transactions.mapToPair(
-				new PairFunction<Tuple2<List<String>, Integer>, List<String>, Integer> (){
-				public Tuple2<List<String>, Integer> call(Tuple2<List<String>, Integer> callSignCount) {
-				List<String> sign = callSignCount._1();
-				String country = lookupCountry(sign, callSignInfo.value());
-				return new Tuple2(country, callSignCount._2());
-				}}).reduceByKey(new SumInts());
-				*/
+		/*
+		 * JavaPairRDD<List<String>, Integer> countryContactCounts =
+		 * transactions.mapToPair( new PairFunction<Tuple2<List<String>,
+		 * Integer>, List<String>, Integer> (){ public Tuple2<List<String>,
+		 * Integer> call(Tuple2<List<String>, Integer> callSignCount) {
+		 * List<String> sign = callSignCount._1(); String country =
+		 * lookupCountry(sign, callSignInfo.value()); return new Tuple2(country,
+		 * callSignCount._2()); }}).reduceByKey(new SumInts());
+		 */
 		return result;
 
 	}

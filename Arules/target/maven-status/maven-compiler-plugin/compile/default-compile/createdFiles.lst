@@ -1,14 +1,16 @@
 com\dissertation\arules\AssociationRuleMiner$2.class
 com\dissertation\arules\Main$3.class
 com\dissertation\arules\Main.class
+com\dissertation\arules\SuperSetFilter.class
 com\dissertation\arules\test\TestClass.class
-com\dissertation\arules\AssociationRuleMiner$3.class
 com\dissertation\arules\Main$2.class
 com\dissertation\arules\AssociationRuleMiner.class
 com\dissertation\arules\CustomAssociationRule.class
+com\dissertation\arules\SuperSetFilter$2.class
 com\dissertation\arules\HelperFunctions.class
 com\dissertation\arules\Main$1.class
 com\dissertation\arules\AssociationRuleFunctions.class
 com\dissertation\arules\AssociationRuleMiner$1.class
+com\dissertation\arules\SuperSetFilter$1.class
 com\dissertation\arules\ContingencyValues.class
 com\dissertation\arules\ContingencyCell.class

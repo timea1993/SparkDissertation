@@ -136,7 +136,8 @@ public class Main {
 				writer.println("\n");
 
 			}
-
+			
+		
 			writer.close();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -171,7 +172,7 @@ public class Main {
 		return independenceTestResult;
 
 	}
-
+     
 	/**
 	 * @param basket
 	 *            list of elements containing the items from an association rule
