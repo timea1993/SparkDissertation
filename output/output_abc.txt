@@ -1,0 +1,48 @@
+
+//Finding association rules with minSupport = 0.5 and minConfidence = 0.6
+
+************************************
+Before filtering:  16 rules
+
+[B, A] = > [C], confidence = 0.6666666666666666
+[B, A] = > [E], confidence = 0.6666666666666666
+[E] = > [B], confidence = 1.0
+[E] = > [A], confidence = 1.0
+[B] = > [A], confidence = 1.0
+[B] = > [C], confidence = 0.6666666666666666
+[B] = > [E], confidence = 0.6666666666666666
+[A] = > [B], confidence = 0.75
+[A] = > [C], confidence = 0.75
+[C, B] = > [A], confidence = 1.0
+[H] = > [A], confidence = 1.0
+[E, B] = > [A], confidence = 1.0
+[C, A] = > [B], confidence = 0.6666666666666666
+[E, A] = > [B], confidence = 1.0
+[C] = > [B], confidence = 0.6666666666666666
+[C] = > [A], confidence = 1.0
+************************************
+Printing out the rules after filtering the supersets:  10 rules 
+
+[H] = > [A], confidence = 1.0
+[C] = > [A], confidence = 1.0
+[C] = > [B], confidence = 0.6666666666666666
+[B] = > [A], confidence = 1.0
+[B] = > [C], confidence = 0.6666666666666666
+[A] = > [B], confidence = 0.75
+[B] = > [E], confidence = 0.6666666666666666
+[A] = > [C], confidence = 0.75
+[E] = > [A], confidence = 1.0
+[E] = > [B], confidence = 1.0
+************************************
+Computing chisquare for each rule: 
+
+[H] = > [A], confidence = 1.0
+[C] = > [A], confidence = 1.0, chisquare = 0.375
+[C] = > [B], confidence = 0.6666666666666666, chisquare = 0.1388888888888888
+[B] = > [A], confidence = 1.0, chisquare = 0.375
+[B] = > [C], confidence = 0.6666666666666666, chisquare = 0.1388888888888888
+[A] = > [B], confidence = 0.75, chisquare = 0.375
+[B] = > [E], confidence = 0.6666666666666666, chisquare = 0.1388888888888888
+[A] = > [C], confidence = 0.75, chisquare = 0.375
+[E] = > [A], confidence = 1.0
+[E] = > [B], confidence = 1.0, chisquare = 0.1388888888888888

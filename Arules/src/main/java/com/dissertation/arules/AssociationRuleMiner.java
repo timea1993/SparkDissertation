@@ -26,6 +26,8 @@ import org.apache.spark.mllib.linalg.Matrix;
 import org.apache.spark.mllib.stat.Statistics;
 import org.apache.spark.mllib.stat.test.ChiSqTestResult;
 
+import com.dissertation.util.Config;
+
 import scala.Tuple2;
 
 public class AssociationRuleMiner implements Serializable {
@@ -33,65 +35,118 @@ public class AssociationRuleMiner implements Serializable {
 	private double minSupport;
 	private double minConfidence;
 	private FPGrowth fpg;
+	private Config config;
 
-	public AssociationRuleMiner(double minSupport, double minConfidence) {
-		this.minSupport = minSupport;
-		this.minConfidence = minConfidence;
+	public AssociationRuleMiner(Config config) {
+		this.config = config;
+		this.minSupport = config.getMinSupport();
+		this.minConfidence = config.getMinConfidence();
 		this.fpg = new FPGrowth().setMinSupport(minSupport).setNumPartitions(10);
-		logger.info("//Finding association rules with minSupport = " + minSupport + " and minConfidence = "
+		logger.info("Finding association rules with minSupport = " + minSupport + " and minConfidence = "
 				+ minConfidence + "\n");
 	}
 
-	public void getAssociationRules(JavaRDD<List<String>> transactions) {
+	public void getAssociationRules(JavaRDD<List<String>> transactions)
+			throws FileNotFoundException, UnsupportedEncodingException {
 
 		FPGrowthModel<String> model = fpg.run(transactions);
 
-		List<FreqItemset<String>> allItems = model.freqItemsets().toJavaRDD().collect();
+		// List<FreqItemset<String>> allItems =
+		// model.freqItemsets().toJavaRDD().collect();
 
-		for (FPGrowth.FreqItemset<String> itemset : allItems) {
+		final PrintWriter writer = new PrintWriter(config.getOutputFile(), "UTF-8");
+		writer.println();
+		writer.println("//Finding association rules with minSupport = " + minSupport + " and minConfidence = "
+				+ minConfidence + "\n");
 
-			logger.info("[" + itemset.javaItems() + "], " + itemset.freq());
-
-		}
-		logger.info("\n");
-		System.out.println("-------------------------");
-		System.out.println("Finding association rules from the frequent itemsets: ");
-		System.out.println("-------------------------");
+		/*
+		 * for (FPGrowth.FreqItemset<String> itemset : allItems) {
+		 * 
+		 * logger.info("[" + itemset.javaItems() + "], " + itemset.freq());
+		 * writer.println("[" + itemset.javaItems() + "], " + itemset.freq()); }
+		 */
 		JavaRDD<Rule<String>> rules = model.generateAssociationRules(minConfidence).toJavaRDD();
-		try {
-			JavaRDD<CustomAssociationRule> result = rules.map((new Function<Rule<String>, CustomAssociationRule>() {
 
-				@Override
-				public CustomAssociationRule call(Rule<String> rule) throws Exception {
-					CustomAssociationRule customRule = new CustomAssociationRule();
+		JavaRDD<CustomAssociationRule> result = rules.map((new Function<Rule<String>, CustomAssociationRule>() {
 
-					List<String> ruleBasket = new ArrayList<String>();
-					ruleBasket.addAll(rule.javaConsequent());
-					ruleBasket.addAll(rule.javaAntecedent());
-					customRule.getAntecendent().addAll(rule.javaAntecedent());
-					customRule.getConsequent().addAll(rule.javaConsequent());
-					customRule.setConfidence(rule.confidence());
-					//logger.info("Contingency matrix (!!column-wise traversal) = ");
-					//double[] matrix = filterItem(ruleBasket, transactions);
-					//customRule.setChisquare(computeChisq(matrix, rule.javaAntecedent().size()).statistic());
-					return customRule;
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 
-				}
+			@Override
+			public CustomAssociationRule call(Rule<String> rule) throws Exception {
+				CustomAssociationRule customRule = new CustomAssociationRule();
 
-			}));
+				List<String> ruleBasket = new ArrayList<String>();
+				ruleBasket.addAll(rule.javaConsequent());
+				ruleBasket.addAll(rule.javaAntecedent());
+				customRule.getAntecendent().addAll(rule.javaAntecedent());
+				customRule.getConsequent().addAll(rule.javaConsequent());
+				customRule.setConfidence(rule.confidence());
+				// logger.info("Contingency matrix (!!column-wise traversal) =
+				// ");
+				// double[] matrix = filterItem(ruleBasket, transactions);
+				// customRule.setChisquare(computeChisq(matrix,
+				// rule.javaAntecedent().size()).statistic());
+				return customRule;
 
-			logger.info("Before filtering " + result.collect().size() + " rules");
-			JavaRDD<CustomAssociationRule> toFilter = result.cartesian(result).map(SuperSetFilter.mapSuperSets)
-					.filter(SuperSetFilter.retainSuperSets).distinct();
-			List<CustomAssociationRule> finalResult = result.subtract(toFilter).collect();
-			logger.info("\n");
-			logger.info("Final results... after filtering there will be " + finalResult.size() + " rules");
-			for (CustomAssociationRule rule : finalResult) {
-				logger.info(rule.toString());
 			}
-		} catch (Exception e) {
-			logger.error(e.getMessage());
+
+		}));
+		writer.println("************************************");
+
+		writer.println("Before filtering:  " + result.collect().size() + " rules" + "\n");
+		logger.info("Before filtering " + result.collect().size() + " rules");
+
+		for (CustomAssociationRule rule : result.collect()) {
+			writer.println(rule.toString());
 		}
+		JavaRDD<CustomAssociationRule> toFilter = result.cartesian(result).map(SuperSetFilter.mapSuperSets)
+				.filter(SuperSetFilter.retainSuperSets).distinct();
+		JavaRDD<CustomAssociationRule> filteredRDD = result.subtract(toFilter);
+		List<CustomAssociationRule> finalResult = filteredRDD.collect();
+
+		logger.info("After filtering there will be " + finalResult.size() + " rules");
+		writer.println("************************************");
+		writer.println(
+				"Printing out the rules after filtering the supersets:  " + finalResult.size() + " rules " + "\n");
+
+		for (CustomAssociationRule rule : finalResult) {
+			writer.println(rule.toString());
+		}
+		
+	/*	JavaRDD<CustomAssociationRule> resultwithChisq = filteredRDD.map((new Function<CustomAssociationRule, CustomAssociationRule>() {
+
+			public CustomAssociationRule call(CustomAssociationRule rule) throws Exception {
+				List<String> ruleBasket = new ArrayList<String>();
+				ruleBasket.addAll(rule.getConsequent());
+				ruleBasket.addAll(rule.getAntecendent());
+				double[] matrix = filterItem(ruleBasket, transactions);
+				rule.setChisquare(computeChisq(matrix, rule.getAntecendent().size()).statistic());
+		
+				return rule;
+
+			}
+
+		}));
+		resultwithChisq.collect();*/
+		
+		for (CustomAssociationRule rule : finalResult) {
+			List<String> ruleBasket = new ArrayList<String>();
+			ruleBasket.addAll(rule.getConsequent());
+			ruleBasket.addAll(rule.getAntecendent());
+			double[] matrix = filterItem(ruleBasket, transactions);
+			rule.setChisquare(computeChisq(matrix, rule.getAntecendent().size()).statistic());
+		}
+		writer.println("************************************");
+		logger.info("Computing chisquare for each rule");
+		writer.println("Computing chisquare for each rule: " + "\n");
+		for (CustomAssociationRule rule : finalResult) {
+			writer.println(rule.toString());
+		}
+		logger.info("Finishing chisquare");
+		writer.close();
 	}
 
 	/**
@@ -143,15 +198,7 @@ public class AssociationRuleMiner implements Serializable {
 			result[i] = countItems.count() == 0 ? 1 : countItems.count();
 
 		}
-		/*
-		 * JavaPairRDD<List<String>, Integer> countryContactCounts =
-		 * transactions.mapToPair( new PairFunction<Tuple2<List<String>,
-		 * Integer>, List<String>, Integer> (){ public Tuple2<List<String>,
-		 * Integer> call(Tuple2<List<String>, Integer> callSignCount) {
-		 * List<String> sign = callSignCount._1(); String country =
-		 * lookupCountry(sign, callSignInfo.value()); return new Tuple2(country,
-		 * callSignCount._2()); }}).reduceByKey(new SumInts());
-		 */
+
 		return result;
 
 	}

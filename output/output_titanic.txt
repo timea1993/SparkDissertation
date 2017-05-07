@@ -1,0 +1,121 @@
+
+//Finding association rules with minSupport = 0.005 and minConfidence = 0.8
+
+************************************
+Before filtering:  71 rules
+
+[Yes, Crew, Male] = > [Adult], confidence = 1.0
+[Child, 2nd, Female] = > [Yes], confidence = 1.0
+[Child, Female, No] = > [3rd], confidence = 1.0
+[Child, No, Male] = > [3rd], confidence = 1.0
+[3rd, Male, Adult] = > [No], confidence = 0.8376623376623377
+[Female, 3rd] = > [Adult], confidence = 0.8418367346938775
+[Crew] = > [Male], confidence = 0.9740112994350283
+[Crew] = > [Adult], confidence = 1.0
+[2nd, Female] = > [Yes], confidence = 0.8773584905660378
+[2nd, Female] = > [Adult], confidence = 0.8773584905660378
+[Female, No] = > [Adult], confidence = 0.8650793650793651
+[Female, No] = > [3rd], confidence = 0.8412698412698413
+[3rd, Male] = > [No], confidence = 0.8274509803921568
+[3rd, Male] = > [Adult], confidence = 0.9058823529411765
+[1st] = > [Adult], confidence = 0.9815384615384616
+[Male] = > [Adult], confidence = 0.9630271519352975
+[Yes, Crew] = > [Male], confidence = 0.9056603773584906
+[Yes, Crew] = > [Adult], confidence = 1.0
+[No, Adult] = > [Male], confidence = 0.9242002781641169
+[1st, Male] = > [Adult], confidence = 0.9722222222222222
+[1st, Female, Yes] = > [Adult], confidence = 0.9929078014184397
+[3rd, No] = > [Adult], confidence = 0.9015151515151515
+[Crew, No, Male] = > [Adult], confidence = 1.0
+[2nd] = > [Adult], confidence = 0.9157894736842105
+[Female, No, Adult] = > [3rd], confidence = 0.8165137614678899
+[2nd, Female, Yes] = > [Adult], confidence = 0.8602150537634409
+[Yes] = > [Adult], confidence = 0.919831223628692
+[3rd, No, Male] = > [Adult], confidence = 0.9170616113744076
+[Yes, Crew, Adult] = > [Male], confidence = 0.9056603773584906
+[1st, No, Adult] = > [Male], confidence = 0.9672131147540983
+[Female, 3rd, No] = > [Adult], confidence = 0.839622641509434
+[Female, Yes, Crew] = > [Adult], confidence = 1.0
+[1st, Yes, Male] = > [Adult], confidence = 0.9193548387096774
+[No, Male] = > [Adult], confidence = 0.9743401759530792
+[Female, Yes] = > [Adult], confidence = 0.9186046511627907
+[Crew, No, Adult] = > [Male], confidence = 0.9955423476968797
+[Female, Crew, Adult] = > [Yes], confidence = 0.8695652173913043
+[Crew, No] = > [Male], confidence = 0.9955423476968797
+[Crew, No] = > [Adult], confidence = 1.0
+[1st, No] = > [Male], confidence = 0.9672131147540983
+[1st, No] = > [Adult], confidence = 1.0
+[Child, No] = > [3rd], confidence = 1.0
+[2nd, Yes, Adult] = > [Female], confidence = 0.851063829787234
+[Yes, Male] = > [Adult], confidence = 0.9209809264305178
+[Child, 2nd] = > [Yes], confidence = 1.0
+[1st, Female] = > [Yes], confidence = 0.9724137931034482
+[1st, Female] = > [Adult], confidence = 0.993103448275862
+[3rd] = > [Adult], confidence = 0.8881019830028328
+[Crew, Male] = > [Adult], confidence = 1.0
+[3rd, Yes, Male] = > [Adult], confidence = 0.8522727272727273
+[2nd, No, Male] = > [Adult], confidence = 1.0
+[1st, Yes] = > [Adult], confidence = 0.9704433497536946
+[No] = > [Male], confidence = 0.9154362416107382
+[No] = > [Adult], confidence = 0.9651006711409396
+[1st, No, Male] = > [Adult], confidence = 1.0
+[2nd, No, Adult] = > [Male], confidence = 0.9221556886227545
+[Female] = > [Adult], confidence = 0.9042553191489362
+[3rd, Yes] = > [Adult], confidence = 0.848314606741573
+[Female, 3rd, Yes] = > [Adult], confidence = 0.8444444444444444
+[2nd, Female, No] = > [Adult], confidence = 1.0
+[3rd, No, Adult] = > [Male], confidence = 0.8130252100840336
+[2nd, Male, Adult] = > [No], confidence = 0.9166666666666666
+[Female, Crew] = > [Yes], confidence = 0.8695652173913043
+[Female, Crew] = > [Adult], confidence = 1.0
+[1st, Female, Adult] = > [Yes], confidence = 0.9722222222222222
+[2nd, Female, Adult] = > [Yes], confidence = 0.8602150537634409
+[Crew, Adult] = > [Male], confidence = 0.9740112994350283
+[2nd, No] = > [Male], confidence = 0.9221556886227545
+[2nd, No] = > [Adult], confidence = 1.0
+[2nd, Male] = > [No], confidence = 0.8603351955307262
+[2nd, Male] = > [Adult], confidence = 0.9385474860335196
+************************************
+Printing out the rules after filtering the supersets:  19 rules 
+
+[Male] = > [Adult], confidence = 0.9630271519352975
+[Female] = > [Adult], confidence = 0.9042553191489362
+[Crew] = > [Male], confidence = 0.9740112994350283
+[Child, No] = > [3rd], confidence = 1.0
+[Female, Crew] = > [Yes], confidence = 0.8695652173913043
+[2nd, Yes, Adult] = > [Female], confidence = 0.851063829787234
+[3rd, Male] = > [No], confidence = 0.8274509803921568
+[2nd, Male] = > [No], confidence = 0.8603351955307262
+[Crew] = > [Adult], confidence = 1.0
+[No] = > [Male], confidence = 0.9154362416107382
+[Female, No] = > [3rd], confidence = 0.8412698412698413
+[Yes] = > [Adult], confidence = 0.919831223628692
+[1st] = > [Adult], confidence = 0.9815384615384616
+[3rd] = > [Adult], confidence = 0.8881019830028328
+[2nd] = > [Adult], confidence = 0.9157894736842105
+[No] = > [Adult], confidence = 0.9651006711409396
+[1st, Female] = > [Yes], confidence = 0.9724137931034482
+[Child, 2nd] = > [Yes], confidence = 1.0
+[2nd, Female] = > [Yes], confidence = 0.8773584905660378
+************************************
+Computing chisquare for each rule: 
+
+[Male] = > [Adult], confidence = 0.9630271519352975, chisquare = 27.124719690039772
+[Female] = > [Adult], confidence = 0.9042553191489362, chisquare = 27.124719690039775
+[Crew] = > [Male], confidence = 0.9740112994350283, chisquare = 310.01984717146405
+[Child, No] = > [3rd], confidence = 1.0, chisquare = 137.1739474675061
+[Female, Crew] = > [Yes], confidence = 0.8695652173913043, chisquare = 459.8720996574747
+[2nd, Yes, Adult] = > [Female], confidence = 0.851063829787234, chisquare = 565.3144342540893
+[3rd, Male] = > [No], confidence = 0.8274509803921568, chisquare = 576.3797212052344
+[2nd, Male] = > [No], confidence = 0.8603351955307262, chisquare = 474.89277391681907
+[Crew] = > [Adult], confidence = 1.0, chisquare = 74.46912587769826
+[No] = > [Male], confidence = 0.9154362416107382, chisquare = 456.8741562604398
+[Female, No] = > [3rd], confidence = 0.8412698412698413, chisquare = 174.05992514177973
+[Yes] = > [Adult], confidence = 0.919831223628692, chisquare = 20.955504554296006
+[1st] = > [Adult], confidence = 0.9815384615384616, chisquare = 7.815642526508898
+[3rd] = > [Adult], confidence = 0.8881019830028328, chisquare = 85.91274394244765
+[2nd] = > [Adult], confidence = 0.9157894736842105, chisquare = 8.368918991194969
+[No] = > [Adult], confidence = 0.9651006711409396, chisquare = 20.95550455429601
+[1st, Female] = > [Yes], confidence = 0.9724137931034482, chisquare = 528.4461124432544
+[Child, 2nd] = > [Yes], confidence = 1.0, chisquare = 52.16601068584103
+[2nd, Female] = > [Yes], confidence = 0.8773584905660378, chisquare = 474.892773916819

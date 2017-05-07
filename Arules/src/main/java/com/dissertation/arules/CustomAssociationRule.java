@@ -110,12 +110,15 @@ public class CustomAssociationRule implements Serializable {
 		builder.append(this.antecendent.toString());
 		builder.append(" = > ");
 		builder.append(this.consequent.toString());
-		if (this.removable())
+		if (this.removable()) {
 			builder.append(" - Flagged ");
-		// builder.append(", confidence = ");
-		// builder.append(this.confidence);
-		// builder.append(", chisquare = ");
-		// builder.append(this.chisquare);
+		}
+		builder.append(", confidence = ");
+		builder.append(this.confidence);
+		if (chisquare != 0) {
+			builder.append(", chisquare = ");
+			builder.append(this.chisquare);
+		}
 		// builder.append(" ]");
 		return builder.toString();
 	}
