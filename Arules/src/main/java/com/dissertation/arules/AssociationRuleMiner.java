@@ -131,6 +131,10 @@ public class AssociationRuleMiner implements Serializable {
 
 		}));
 		resultwithChisq.collect();*/
+		logger.info("Computing chisquare for each rule");
+		writer.println("************************************");
+		
+		writer.println("Computing chisquare for each rule: " + "\n");
 		
 		for (CustomAssociationRule rule : finalResult) {
 			List<String> ruleBasket = new ArrayList<String>();
@@ -139,9 +143,7 @@ public class AssociationRuleMiner implements Serializable {
 			double[] matrix = filterItem(ruleBasket, transactions);
 			rule.setChisquare(computeChisq(matrix, rule.getAntecendent().size()).statistic());
 		}
-		writer.println("************************************");
-		logger.info("Computing chisquare for each rule");
-		writer.println("Computing chisquare for each rule: " + "\n");
+		
 		for (CustomAssociationRule rule : finalResult) {
 			writer.println(rule.toString());
 		}
